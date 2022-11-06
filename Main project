@@ -1,0 +1,120 @@
+#Importing Libraries
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+
+#Getting the Dataset
+data=pd.read_csv(r"C:\Users\Personal\github\Data Analysis Project\Airline_Delay_Cause.csv\Airline_Delay_Cause.csv")
+#Checking whether it runs
+print(data.head())
+#Checking for null values
+print(data.isnull().sum())
+#Replacing the null values
+data=data.fillna(0)
+print(data.isnull().sum())
+
+#Description of the Statistics
+data.describe()
+
+#Finding the top 10 airports where the arrival cancellation,diversion and delay takes place for Endeavor Air Inc. in 2022 during month 7
+data_2022=data[data['year']==2022]
+data_2022_7=data_2022[data_2022['month']==7]
+most_cancel_arr=data_2022_7.sort_values(by=['arr_cancelled'],ascending=False)
+most_cancel_arr_E=most_cancel_arr[most_cancel_arr['carrier_name']=='Endeavor Air Inc.']
+
+most_diverted_arr=data_2022_7.sort_values(by=['arr_diverted'],ascending=False)
+most_diverted_arr_E=most_diverted_arr[most_diverted_arr['carrier_name']=='Endeavor Air Inc.']
+
+most_delay_arr=data_2022_7.sort_values(by=['arr_delay'],ascending=False)
+most_delay_arr_E=most_delay_arr[most_delay_arr['carrier_name']=='Endeavor Air Inc.']
+
+print("The top 10 airports with arrival cancellation is: ")
+print(most_cancel_arr_E['airport_name'].head(10))
+print(" ")
+print("The top 10 airports with arrival diversion is: ")
+print(most_diverted_arr_E['airport_name'].head(10))
+print(" ")
+print("The top 10 airport with arrival delay is:")
+print(most_delay_arr_E['airport_name'].head(10))
+#Finding the top 10 airports where the carrier,weather,nas,security and late_aircraft delay takes place for Endeavor Air Inc. in 2022 during the 7 month 
+most_carrier_delay=data_2022_7.sort_values(by=['carrier_delay'],ascending=False)
+most_carrier_delay_E=most_carrier_delay[most_carrier_delay['carrier_name']=='Endeavor Air Inc.']
+
+most_weather_delay=data_2022_7.sort_values(by=['arr_diverted'],ascending=False)
+most_weather_delay_E=most_weather_delay[most_weather_delay['carrier_name']=='Endeavor Air Inc.']
+
+most_nas_delay=data_2022_7.sort_values(by=['nas_delay'],ascending=False)
+most_nas_delay_E=most_nas_delay[most_nas_delay['carrier_name']=='Endeavor Air Inc.']
+
+most_security_delay=data_2022_7.sort_values(by=['security_delay'],ascending=False)
+most_security_delay_E=most_security_delay[most_security_delay['carrier_name']=='Endeavor Air Inc.']
+
+most_late_aircraft_delay =data_2022_7.sort_values(by=['late_aircraft_delay'],ascending=False)
+most_late_aircraft_delay_E=most_late_aircraft_delay [most_late_aircraft_delay ['carrier_name']=='Endeavor Air Inc.']
+
+
+print("The top 10 airports with carrier delay is: ")
+print(most_carrier_delay_E['airport_name'].head(10))
+print(" ")
+print("The top 10 airports with weather delay is: ")
+print(most_weather_delay_E['airport_name'].head(10))
+print(" ")
+print("The top 10 airport with nas delay is:")
+print(most_nas_delay_E['airport_name'].head(10))
+print(" ")
+print("The top 10 airports with security delay is: ")
+print(most_security_delay_E['airport_name'].head(10))
+print(" ")
+print("The top 10 airports with late aircraft delay is: ")
+print(most_late_aircraft_delay_E['airport_name'].head(10))
+
+#Graphical representation  
+delays=most_late_aircraft_delay_E['airport_name'].head(10)
+counts = most_late_aircraft_delay_E['late_aircraft_delay'].head(10)
+figure = px.bar(most_late_aircraft_delay_E, x=delays, 
+                y = counts, 
+            title="Highest Late Aircraft Delay")
+figure.update_layout(xaxis_title="Airport Names",yaxis_title="Number of Delays")
+
+figure.show()
+
+delays1=most_security_delay_E['airport_name'].head(10)
+counts1= most_security_delay_E['security_delay'].head(10)
+figure = px.bar(most_security_delay_E, x=delays1, 
+                y = counts1, 
+            title="Highest Security Delay")
+figure.update_layout(xaxis_title="Airport Names",yaxis_title="Number of Delays")
+
+figure.show()
+
+delays2=most_nas_delay_E['airport_name'].head(10)
+counts2=most_nas_delay_E['nas_delay'].head(10)
+figure = px.bar(most_nas_delay_E, x=delays2, 
+                y = counts2, 
+            title="Highest Nas Delay")
+figure.update_layout(xaxis_title="Airport Names",yaxis_title="Number of Delays")
+
+figure.show()
+
+#Relationship between arrival cancellation and arrival delay
+figure = px.scatter(data_frame = data_2022_7, x="arr_cancelled",
+                    y="arr_delay",  trendline="ols", 
+                    title="Relationship between Arrival Cancellation and Arrival Delayed")
+figure.update_layout(xaxis_title="Arrival Cancelled",yaxis_title="Arrival Delayed")
+figure.show()
+
+#Relationship between arrival cancellation and carrier delay
+figure = px.scatter(data_frame = data_2022_7, x="arr_cancelled",
+                    y="carrier_delay",  trendline="ols", 
+                    title="Relationship between Arrival Cancellation and Carrier Delayed")
+figure.update_layout(xaxis_title="Arrival Cancelled",yaxis_title="Carrier Delayed")
+figure.show()
+
+#Relationship between weather delay and security delay
+figure = px.scatter(data_frame = data_2022_7, x="weather_delay",
+                    y="security_delay",  trendline="ols", 
+                    title="Relationship between Weather Delay and Security Delay")
+figure.update_layout(xaxis_title="Weather Delay",yaxis_title="Security Delay")
+figure.show()
+
